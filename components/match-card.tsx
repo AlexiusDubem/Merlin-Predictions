@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FaCrown, FaFutbol, FaBasketballBall, FaTableTennis, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaBullseye, FaLock } from 'react-icons/fa'
+import { FaCrown, FaFutbol, FaBasketballBall, FaTableTennis, FaFootballBall, FaBaseballBall, FaHockeyPuck, FaBullseye, FaLock, FaCheckCircle } from 'react-icons/fa'
 
 interface MatchCardProps {
     id: string
@@ -107,12 +107,14 @@ export default function MatchCard({ id, fixture, league, sport, time, prediction
                             </span>
                         )}
                     </div>
-                    <div className="mc-actions">
-                        <Link href={`/dashboard/matches/${id}`} className="mc-btn-outline">Detail</Link>
-                        {locked
-                            ? <Link href="/dashboard/premium" className="mc-btn-upgrade">Upgrade</Link>
-                            : <button className="mc-btn-primary">+ Watch</button>
-                        }
+                    <div className="mc-actions" style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                        {locked ? (
+                            <Link href="/dashboard/premium" className="mc-btn-upgrade" style={{ width: '100%', textAlign: 'center' }}>Unlock VIP Pick</Link>
+                        ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: '#ecfdf5', color: '#059669', fontSize: '10px', fontWeight: 'bold', padding: '6px 12px', borderRadius: '8px', border: '1px solid #d1fae5', width: '100%', justifyContent: 'center' }}>
+                                <FaCheckCircle style={{ width: '12px', height: '12px' }} /> Verified AI Scan
+                            </div>
+                        )}
                     </div>
                 </div>
 

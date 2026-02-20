@@ -80,7 +80,7 @@ export default function DashboardPage() {
           <div>
             <p className="text-[11px] font-medium text-gray-400 flex items-center gap-1.5"><FaUser className="h-3 w-3 text-gray-400" /> Good evening, {username}</p>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <h1 className="text-lg font-bold text-gray-900 tracking-tight">Merlin</h1>
+              <h1 className="text-lg font-black text-gray-900 tracking-tight uppercase">PREDICTIONS</h1>
               {isPremium && (
                 <span className="bg-amber-100 text-amber-800 text-[9px] font-bold px-1.5 py-0.5 rounded-sm tracking-wider uppercase">VIP</span>
               )}
