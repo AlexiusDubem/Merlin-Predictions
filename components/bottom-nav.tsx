@@ -28,10 +28,6 @@ export default function BottomNav() {
                             href={href}
                             className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl relative group"
                         >
-                            {/* Active pill background */}
-                            {active && (
-                                <span className="absolute inset-0 rounded-2xl bg-primary/10" />
-                            )}
                             <Icon
                                 className={`relative h-5 w-5 transition-all duration-200 ${active ? 'text-primary scale-110' : 'text-muted-foreground group-hover:text-foreground'
                                     }`}

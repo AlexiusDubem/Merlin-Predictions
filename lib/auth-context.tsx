@@ -32,12 +32,21 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
+const ADMIN_EMAILS = [
+    process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? '',
+    'anijoseph774@gmail.com',
+    'xagawork@gmail.com'
+].filter(Boolean)
+
+function checkIfAdmin(email: string | null | undefined) {
+    if (!email) return false
+    return ADMIN_EMAILS.includes(email)
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null)
     const [profile, setProfile] = useState<UserProfile | null>(null)
     const [loading, setLoading] = useState(true)
-
-    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? ''
 
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -46,13 +55,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const ref = doc(db, 'users', firebaseUser.uid)
                 const snap = await getDoc(ref)
 
+                const isAdminUser = checkIfAdmin(firebaseUser.email)
+
                 if (snap.exists()) {
                     const data = snap.data()
                     setProfile({
                         email: data.email ?? firebaseUser.email ?? '',
                         plan: data.plan ?? 'free',
                         planExpiry: data.planExpiry?.toDate() ?? null,
-                        isAdmin: firebaseUser.email === adminEmail,
+                        isAdmin: isAdminUser,
                         username: data.username ?? firebaseUser.email?.split('@')[0] ?? 'User',
                     })
                 } else {
@@ -68,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         email: firebaseUser.email ?? '',
                         plan: 'free',
                         planExpiry: null,
-                        isAdmin: firebaseUser.email === adminEmail,
+                        isAdmin: isAdminUser,
                         username: firebaseUser.email?.split('@')[0] ?? 'User',
                     })
                 }
@@ -78,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setLoading(false)
         })
         return unsub
-    }, [adminEmail])
+    }, [])
 
     const signIn = async (email: string, password: string) => {
         await signInWithEmailAndPassword(auth, email, password)
@@ -100,17 +111,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const isPremium = profile?.plan === 'premium'
-    const isAdmin = firebaseUser_email_check(user, adminEmail)
+    const isAdmin = checkIfAdmin(user?.email)
 
     return (
         <AuthContext.Provider value={{ user, profile, loading, isPremium, isAdmin, signIn, signUp, signOut }}>
             {children}
         </AuthContext.Provider>
     )
-}
-
-function firebaseUser_email_check(user: User | null, adminEmail: string) {
-    return !!user && !!adminEmail && user.email === adminEmail
 }
 
 export function useAuth() {

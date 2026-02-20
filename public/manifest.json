@@ -1,0 +1,21 @@
+{
+    "name": "Merlin Predictions",
+    "short_name": "Merlin",
+    "description": "AI-Driven Sports Predictions Engine",
+    "start_url": "/dashboard",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#7c3aed",
+    "icons": [
+        {
+            "src": "/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

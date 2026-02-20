@@ -23,7 +23,7 @@ const plans = [
   },
   {
     name: 'Premium',
-    price: '$9.99',
+    price: '$39',
     period: '/mo',
     features: [
       'All free picks',

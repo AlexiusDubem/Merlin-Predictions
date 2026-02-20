@@ -194,3 +194,145 @@ export function useLeaderboard() {
 
     return { entries, loading }
 }
+
+// ── Notifications ───────────────────────────────────────────
+export interface AppNotification {
+    id: string
+    title: string
+    message: string
+    type: 'info' | 'success' | 'warning'
+    createdAt: Timestamp | null
+}
+
+const notificationsListener: Listener<AppNotification> = { data: [], subscribers: new Set(), unsub: null }
+
+function ensureNotificationsListener() {
+    if (notificationsListener.unsub) return
+
+    const q = query(collection(db, 'notifications'), orderBy('createdAt', 'desc'))
+    notificationsListener.unsub = onSnapshot(
+        q,
+        (snap: QuerySnapshot<DocumentData>) => {
+            notificationsListener.data = snap.docs.map((d) => ({
+                id: d.id,
+                ...d.data(),
+            } as AppNotification))
+            notificationsListener.subscribers.forEach((cb) => cb(notificationsListener.data))
+        },
+        () => {
+            notificationsListener.subscribers.forEach((cb) => cb([]))
+        }
+    )
+}
+
+function subscribeNotifications(cb: (data: AppNotification[]) => void): () => void {
+    ensureNotificationsListener()
+    notificationsListener.subscribers.add(cb)
+    cb(notificationsListener.data)
+
+    return () => {
+        notificationsListener.subscribers.delete(cb)
+        if (notificationsListener.subscribers.size === 0 && notificationsListener.unsub) {
+            notificationsListener.unsub()
+            notificationsListener.unsub = null
+            notificationsListener.data = []
+        }
+    }
+}
+
+export function useNotifications() {
+    const [notifications, setNotifications] = useState<AppNotification[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const unsub = subscribeNotifications((data) => {
+            setNotifications(data)
+            setLoading(false)
+        })
+        return unsub
+    }, [])
+
+    return { notifications, loading }
+}
+
+export async function postNotification(data: Omit<AppNotification, 'id' | 'createdAt'>) {
+    await addDoc(collection(db, 'notifications'), {
+        ...data,
+        createdAt: serverTimestamp(),
+    })
+}
+
+export async function deleteNotification(id: string) {
+    await deleteDoc(doc(db, 'notifications', id))
+}
+
+// ── Booking Codes ───────────────────────────────────────────
+export interface SeparateBookingCode {
+    id: string
+    label: string // e.g., "Today's VIP Accumulator"
+    tier: 'free' | 'premium'
+    codes: BookingCodes
+    createdAt: Timestamp | null
+}
+
+const bookingCodesListener: Listener<SeparateBookingCode> = { data: [], subscribers: new Set(), unsub: null }
+
+function ensureBookingCodesListener() {
+    if (bookingCodesListener.unsub) return
+
+    const q = query(collection(db, 'booking_codes'), orderBy('createdAt', 'desc'))
+    bookingCodesListener.unsub = onSnapshot(
+        q,
+        (snap: QuerySnapshot<DocumentData>) => {
+            bookingCodesListener.data = snap.docs.map((d) => ({
+                id: d.id,
+                ...d.data(),
+            } as SeparateBookingCode))
+            bookingCodesListener.subscribers.forEach((cb) => cb(bookingCodesListener.data))
+        },
+        () => {
+            bookingCodesListener.subscribers.forEach((cb) => cb([]))
+        }
+    )
+}
+
+function subscribeBookingCodes(cb: (data: SeparateBookingCode[]) => void): () => void {
+    ensureBookingCodesListener()
+    bookingCodesListener.subscribers.add(cb)
+    cb(bookingCodesListener.data)
+
+    return () => {
+        bookingCodesListener.subscribers.delete(cb)
+        if (bookingCodesListener.subscribers.size === 0 && bookingCodesListener.unsub) {
+            bookingCodesListener.unsub()
+            bookingCodesListener.unsub = null
+            bookingCodesListener.data = []
+        }
+    }
+}
+
+export function useSeparateBookingCodes() {
+    const [bookingCodesList, setBookingCodes] = useState<SeparateBookingCode[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const unsub = subscribeBookingCodes((data) => {
+            setBookingCodes(data)
+            setLoading(false)
+        })
+        return unsub
+    }, [])
+
+    return { bookingCodesList, loading }
+}
+
+export async function postSeparateBookingCode(data: Omit<SeparateBookingCode, 'id' | 'createdAt'>) {
+    await addDoc(collection(db, 'booking_codes'), {
+        ...data,
+        createdAt: serverTimestamp(),
+    })
+}
+
+export async function deleteBookingCode(id: string) {
+    await deleteDoc(doc(db, 'booking_codes', id))
+}
