@@ -105,12 +105,15 @@ export default function DashboardPage() {
 
       {/* ── NOTIFICATIONS MARQUEE ────────*/}
       {notifications.length > 0 && (
-        <div className="bg-blue-50 border-b border-blue-100 px-4 py-2 flex items-center gap-2 overflow-hidden">
-          <FaBolt className="h-3 w-3 text-blue-500 shrink-0" />
-          <div className="flex-1 truncate text-xs font-medium text-blue-800">
-            {notifications[0].title}: <span className="font-normal">{notifications[0].message}</span>
+        <Link href="/dashboard/notifications" className="block">
+          <div className="bg-blue-50 border-b border-blue-100 px-4 py-2 flex items-center gap-2 overflow-hidden hover:bg-blue-100/50 transition cursor-pointer">
+            <FaBolt className="h-3 w-3 text-blue-500 shrink-0" />
+            <div className="flex-1 truncate text-xs font-medium text-blue-800">
+              {notifications[0].title}: <span className="font-normal">{notifications[0].message}</span>
+            </div>
+            <span className="text-blue-400 text-[10px] font-bold shrink-0 pl-2 opacity-50">View all &rarr;</span>
           </div>
-        </div>
+        </Link>
       )}
 
       <div className="mx-auto max-w-md px-5 mt-6 space-y-6">

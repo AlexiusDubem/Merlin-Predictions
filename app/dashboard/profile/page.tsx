@@ -7,7 +7,7 @@ import {
     ArrowLeft, ChevronRight, LogOut,
     User2, LayoutList
 } from 'lucide-react'
-import { FaCrown, FaStar, FaMedal, FaBolt, FaChartLine } from 'react-icons/fa'
+import { FaCrown, FaStar, FaMedal, FaBolt, FaChartLine, FaBell } from 'react-icons/fa'
 import Swal from 'sweetalert2'
 import BottomNav from '@/components/bottom-nav'
 import { useAuth } from '@/lib/auth-context'
@@ -172,6 +172,19 @@ export default function ProfilePage() {
 
                 {/* MENU LIST */}
                 <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden divide-y divide-gray-50">
+                    <Link href="/dashboard/notifications">
+                        <div className="flex items-center gap-3 px-5 py-4 hover:bg-gray-50 transition group cursor-pointer">
+                            <div className="h-10 w-10 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
+                                <FaBell className="h-4 w-4 text-blue-500" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-gray-900">Notifications</p>
+                                <p className="text-xs font-medium text-gray-500 mt-0.5">Alerts & updates</p>
+                            </div>
+                            <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-500 transition shrink-0" />
+                        </div>
+                    </Link>
+
                     <Link href="/dashboard/matches">
                         <div className="flex items-center gap-3 px-5 py-4 hover:bg-gray-50 transition group cursor-pointer">
                             <div className="h-10 w-10 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0">
