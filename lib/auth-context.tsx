@@ -32,11 +32,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
+// Process comma-separated emails from Vercel ENV
+const envAdmins = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || process.env.NEXT_PUBLIC_ADMIN_EMAIL || '')
+    .split(',')
+    .map(email => email.trim())
+    .filter(Boolean)
+
 const ADMIN_EMAILS = [
-    process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? '',
+    ...envAdmins,
     'anijoseph774@gmail.com',
     'xagawork@gmail.com'
-].filter(Boolean)
+]
 
 function checkIfAdmin(email: string | null | undefined) {
     if (!email) return false
