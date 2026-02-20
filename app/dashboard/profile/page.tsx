@@ -231,7 +231,7 @@ export default function ProfilePage() {
                     <LogOut className="h-3.5 w-3.5" /> Secure Sign Out
                 </button>
 
-                <p className="text-center text-[10px] text-gray-400 font-medium pb-4 pt-2">Merlin Predictions · v1.0 AI Verified</p>
+                <p className="text-center text-[10px] text-gray-400 font-medium pb-4 pt-2">Merlin Predictions · v1.0</p>
             </div>
             <BottomNav />
         </main>
